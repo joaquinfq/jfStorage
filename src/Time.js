@@ -16,6 +16,12 @@ module.exports = class jfStorageTime extends jfStorageProxy
     {
         super(Class || jfStorageMemory, config);
         /**
+         * Timer to clear expired items.
+         *
+         * @type {Timeout|number|null}
+         */
+        this.$$timerId = null;
+        /**
          * Timestamps of data in cache.
          *
          * @type {object}
@@ -53,6 +59,23 @@ module.exports = class jfStorageTime extends jfStorageProxy
                 this.removeItem(_key);
             }
         }
+        if (!this.length)
+        {
+            this.clearTimer();
+        }
+    }
+
+    /**
+     * Clear timer used for removing expired items.
+     */
+    clearTimer()
+    {
+        const _timerId = this.$$timerId;
+        if (_timerId !== null)
+        {
+            clearInterval(_timerId);
+            this.$$timerId = null;
+        }
     }
 
     /**
@@ -64,9 +87,15 @@ module.exports = class jfStorageTime extends jfStorageProxy
      */
     isExpired(key)
     {
-        const _time = this.$$timestamps[key];
+        const _time     = this.$$timestamps[key];
+        const _isNumber = typeof _time === 'number';
+        const _is       = !_isNumber || Date.now() >= (_time + this.validTime);
+        if (_is && _isNumber)
+        {
+            this.removeItem(key);
+        }
 
-        return typeof _time !== 'number' || Date.now() >= (_time + this.validTime);
+        return _is;
     }
 
     /**
@@ -86,6 +115,10 @@ module.exports = class jfStorageTime extends jfStorageProxy
     {
         super.removeItem(key);
         delete this.$$timestamps[key];
+        if (!this.length)
+        {
+            this.clearTimer();
+        }
     }
 
     /**
@@ -96,8 +129,14 @@ module.exports = class jfStorageTime extends jfStorageProxy
         if (this._checkKey(key))
         {
             this.$$timestamps[key] = Date.now();
+            if (this.$$timerId === null)
+            {
+                this.$$timerId = setInterval(
+                    () => this.clearExpired(),
+                    this.validTime
+                );
+            }
         }
-
-        return super.setItem(key, value);
+        super.setItem(key, value);
     }
 };

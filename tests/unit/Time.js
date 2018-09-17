@@ -2,6 +2,17 @@ const assert        = require('../assert');
 const common        = require('../common');
 const jfStorageTime = require('../../src/Time');
 
+class TestTime extends jfStorageTime
+{
+    constructor(Class, validTime)
+    {
+        // Pasamos un valor a validTime para cobertura de tests.
+        super(Class, { validTime });
+        // Pero sobrescribimos el valor porque por defecto sería un día.
+        this.validTime = 100;
+    }
+}
+
 function loop(ms = 100)
 {
     const _time = Date.now();
@@ -16,7 +27,7 @@ function loop(ms = 100)
 function testClear()
 {
     const _data    = {};
-    const _storage = common.createStorage(jfStorageTime, _data);
+    const _storage = common.createStorage(TestTime, _data);
     const _keys    = Object.keys(_data);
     assert.assert('deepStrictEqual', _storage.keys(), _keys);
     assert.assert('deepStrictEqual', Object.keys(_storage.$$timestamps), _keys);
@@ -28,7 +39,7 @@ function testClear()
 function testClearExpired()
 {
     const _data    = {};
-    const _storage = common.createStorage(jfStorageTime, _data, 10, null, { validTime : 200 });
+    const _storage = common.createStorage(TestTime, _data, 10, null, 50);
     const _keys    = Object.keys(_data);
     const _time    = Date.now();
     _keys.forEach(
@@ -50,7 +61,7 @@ function testClearExpired()
 function testRemmoveItem()
 {
     const _data       = {};
-    const _storage    = common.createStorage(jfStorageTime, _data, 10, null, { validTime : 200 });
+    const _storage    = common.createStorage(TestTime, _data);
     const _keys       = Object.keys(_data);
     const _timestamps = _storage.$$timestamps;
     _keys.forEach(
@@ -63,7 +74,7 @@ function testRemmoveItem()
     );
 }
 
-common.run(jfStorageTime);
+common.run(TestTime);
 testClear();
 testClearExpired();
 testRemmoveItem();
