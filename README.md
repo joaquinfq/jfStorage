@@ -23,10 +23,10 @@ We want store data requested to servers with following requirements:
 
 
 ```javascript
-const jfStorageFile           = require('jf-storage/src/File');
-const jfStorageKeyCrypto      = require('jf-storage/src/key/Crypto');
-const jfStorageProxy          = require('jf-storage/src/Proxy');
-const jfStorageSerializerJson = require('jf-storage/src/serializer/Json');
+const jfStorageFile           = require('jf-storage-api/src/File');
+const jfStorageKeyCrypto      = require('jf-storage-api/src/key/Crypto');
+const jfStorageProxy          = require('jf-storage-api/src/Proxy');
+const jfStorageSerializerJson = require('jf-storage-api/src/serializer/Json');
 
 function doRequest(url)
 {
