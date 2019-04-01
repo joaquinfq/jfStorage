@@ -33,7 +33,7 @@ module.exports = class jfStorageProxy extends jfStorageBase
     /**
      * Class constructor.
      *
-     * @param {Storage|jf.storage.Base} Class  Storage class reference to create a storage instance.
+     * @param {Class|jf.storage.Base} Class  Storage class reference to create a storage instance.
      * @param {object}                  config Config with functions to use for encoding/decoding data.
      */
     constructor(Class = null, config = {})
@@ -58,7 +58,7 @@ module.exports = class jfStorageProxy extends jfStorageBase
         /**
          * Storage object to use.
          *
-         * @type {Storage|jf.storage.Base}
+         * @type {Class|jf.storage.Base}
          */
         this.$$storage = config.storage || null;
         //------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ module.exports = class jfStorageProxy extends jfStorageBase
     /**
      * Initialize storage instance.
      *
-     * @param {Storage|jf.storage.Base} Class Storage class reference to create a storage instance.
+     * @param {Class|jf.storage.Base} Class Storage class reference to create a storage instance.
      *
      * @protected
      */

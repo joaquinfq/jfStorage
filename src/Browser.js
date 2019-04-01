@@ -10,11 +10,7 @@ const jfStorageProxy = require('./Proxy');
 module.exports = class jfStorageBrowser extends jfStorageProxy
 {
     /**
-     * Initialize storage instance.
-     *
-     * @param {Storage|jf.storage.Base} Class Storage class reference to create a storage instance.
-     *
-     * @protected
+     * @override
      */
     _initStorage(Class = null)
     {
@@ -41,12 +37,10 @@ module.exports = class jfStorageBrowser extends jfStorageProxy
     }
 
     /**
-     * Return name of global storage to use.
-     *
-     * @return {string} Name of global storage to use.
+     * @override
      */
     static get NAME()
     {
-        return this.constructor.name;
+        return this.name;
     }
 };

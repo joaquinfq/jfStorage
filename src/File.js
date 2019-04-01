@@ -1,11 +1,11 @@
-const jfFileSystem  = require('jf-file-system');
+const jfFileSystem  = require('@jf/fs');
 const jfStorageBase = require('./Base');
 const path          = require('path');
 /**
  * Class using filesystem as storage.
  *
  * @namespace jf.storage
- * @class     jf.storage.Memory
+ * @class     jf.storage.File
  * @extends   jf.storage.Base
  */
 module.exports = class jfStorageFile extends jfStorageBase

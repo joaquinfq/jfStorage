@@ -107,6 +107,31 @@ module.exports = class jfStorageCookie extends jfStorageBase
     }
 
     /**
+     * @inheritDoc
+     */
+    removeItem(key)
+    {
+        if (this._checkKey(key))
+        {
+            document.cookie = `${encodeURIComponent(key)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    setItem(key, value)
+    {
+        if (this._checkKey(key))
+        {
+            const _expires  = this.$$expireDate;
+            document.cookie = _expires
+                ? `${encodeURIComponent(key)}=${encodeURIComponent(value)}; expires=${this.$$expireDate}; path=/`
+                : `${encodeURIComponent(key)}=${encodeURIComponent(value)}; path=/`;
+        }
+    }
+
+    /**
      * Polyfill for add support to cookies.
      */
     static polyfill(global)
@@ -149,30 +174,5 @@ module.exports = class jfStorageCookie extends jfStorageBase
         }
 
         return cookies;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    removeItem(key)
-    {
-        if (this._checkKey(key))
-        {
-            document.cookie = `${encodeURIComponent(key)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    setItem(key, value)
-    {
-        if (this._checkKey(key))
-        {
-            const _expires  = this.$$expireDate;
-            document.cookie = _expires
-                ? `${encodeURIComponent(key)}=${encodeURIComponent(value)}; expires=${this.$$expireDate}; path=/`
-                : `${encodeURIComponent(key)}=${encodeURIComponent(value)}; path=/`;
-        }
     }
 };

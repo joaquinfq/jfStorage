@@ -79,6 +79,16 @@ module.exports = class jfStorageTime extends jfStorageProxy
     }
 
     /**
+     * @inheritDoc
+     */
+    getItem(key)
+    {
+        return this.isExpired(key)
+            ? null
+            : super.getItem(key);
+    }
+
+    /**
      * Check if cache has expired.
      *
      * @param {string} key Hash of data to read from cache.
@@ -87,25 +97,14 @@ module.exports = class jfStorageTime extends jfStorageProxy
      */
     isExpired(key)
     {
-        const _time     = this.$$timestamps[key];
-        const _isNumber = typeof _time === 'number';
-        const _is       = !_isNumber || Date.now() >= (_time + this.validTime);
-        if (_is && _isNumber)
+        const _timestamps = this.$$timestamps;
+        const _time       = _timestamps[key];
+        const _is         = !(typeof _time === 'number') || Date.now() >= (_time + this.validTime);
+        if (_is && key in _timestamps)
         {
             this.removeItem(key);
         }
-
         return _is;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    getItem(key)
-    {
-        return this.isExpired(key)
-            ? null
-            : super.getItem(key);
     }
 
     /**
